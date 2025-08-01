@@ -179,12 +179,20 @@ const Navbar = () => {
           <Link to="/profile" className="block text-sm py-1">
             Profile
           </Link>
-
-          <div
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-between pt-2 border-t border-purple-200"
-          >
-            <div className="flex items-center space-x-2">
+          <Link to="/ShortlistedProfiles" className="block text-sm py-1">
+            Shortlisted Profiles
+          </Link>{" "}
+          <Link to="/Settings" className="block text-sm py-1">
+            Settings
+          </Link>{" "}
+          <Link to="/login" className="block text-sm py-1">
+            Log out
+          </Link>
+          <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+            <div
+              className="flex items-center space-x-2"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
               <img
                 src={Profile}
                 alt="User"
@@ -192,39 +200,10 @@ const Navbar = () => {
               />
               <span className="text-sm">Sophia</span>
             </div>
-            <FiBell className="text-xl" />
+            <Link to="/Notifications">
+              <FiBell className="text-xl cursor-pointer" />
+            </Link>
           </div>
-
-          {/* Dropdown Menu */}
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-50">
-              <Link
-                to="/ShortlistedProfiles"
-                className={`block px-4 py-2 text-sm ${
-                  isActive("/shortlisted")
-                    ? "bg-purple-100"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                Shortlisted Profiles
-              </Link>
-              <Link
-                to="/settings"
-                className={`block px-4 py-2 text-sm ${
-                  isActive("/settings") ? "bg-purple-100" : "hover:bg-gray-100"
-                }`}
-              >
-                Settings
-              </Link>
-
-              <Link
-                to="/login"
-                className="block px-4 py-2 text-sm text-red-500 hover:bg-red-50"
-              >
-                Log Out
-              </Link>
-            </div>
-          )}
         </div>
       )}
     </nav>
