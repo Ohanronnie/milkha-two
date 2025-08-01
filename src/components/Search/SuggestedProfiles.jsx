@@ -1,9 +1,5 @@
-import React, { useState } from "react";
-import FilterBar from "../components/Search/FilterBar";
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
-import Profile from "../assets/Profile.png";
-import ProfileModal from "../components/Profile/ProfileModal";
-import SuggestedProfiles from "../components/Search/SuggestedProfiles";
+import Profile from "../../assets/Profile.png";
 
 const profiles = [
   {
@@ -32,17 +28,16 @@ const profiles = [
   },
 ];
 
-const Search = () => {
-  const [selectedProfile, setSelectedProfile] = useState(null);
-
+const SuggestedProfiles = () => {
   return (
-    <div>
-      <FilterBar />
-      <h2 className="text-2xl px-12 font-semibold text-gray-700 mb-4">
-        Search Results...
+    <div className="bg-gray-50 lg:px-12 p-4">
+      <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+        Suggested Profiles
       </h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 lg:px-12 px-4 py-12">
+      <p className="text-purple-500 pb-6">
+        List of Potential Soulmates you might like.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {profiles.map((profile, index) => (
           <div
             key={index}
@@ -73,6 +68,7 @@ const Search = () => {
                 <FaMapMarkerAlt className="mr-1 text-green-500" />
                 {profile.location}
               </div>
+
               <div className="flex items-center justify-between text-xs mb-4">
                 <span className="text-green-500 font-semibold flex items-center gap-1">
                   <FaCheckCircle className="text-sm" />
@@ -80,26 +76,17 @@ const Search = () => {
                 </span>
                 <FaHeart className="text-gray-300" />
               </div>
+
               {/* View Profile Button */}
-              <button
-                onClick={() => setSelectedProfile(profile)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md"
-              >
+              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md">
                 View Profile
               </button>
-              {selectedProfile && (
-                <ProfileModal
-                  profile={selectedProfile}
-                  onClose={() => setSelectedProfile(null)}
-                />
-              )}
             </div>
           </div>
         ))}
       </div>
-      <SuggestedProfiles />
     </div>
   );
 };
 
-export default Search;
+export default SuggestedProfiles;

@@ -1,5 +1,7 @@
 import { FiEdit2 } from "react-icons/fi";
 
+import { Link } from "react-router-dom";
+
 const tags = ["Fitness", "Travel", "Reading", "Photography", "Cooking"];
 
 export default function UserInfoPanel() {
@@ -9,7 +11,9 @@ export default function UserInfoPanel() {
       <div className="border border-purple-300 rounded-lg p-4">
         <div className="flex justify-between items-start mb-2">
           <h4 className="uppercase font-bold text-xs text-gray-600">Bio</h4>
-          <FiEdit2 className="text-gray-500 cursor-pointer" />
+          <Link to="/ProfileForms">
+            <FiEdit2 className="text-gray-500 cursor-pointer" />
+          </Link>
         </div>
         <p className="text-sm leading-relaxed">
           Believer in meaningful connections, long walks under city lights, and

@@ -68,7 +68,7 @@ const TodaysMatches = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 grid lg:grid-cols-3 gap-4 lg:px-12 px-4">
+    <div className="min-h-full bg-gray-100 p-6 grid lg:grid-cols-3 gap-4 lg:px-12 px-4">
       {/* Today's Matches */}
       <div className="lg:col-span-2">
         <p className="text-2xl font-medium ">Today's Matches</p>

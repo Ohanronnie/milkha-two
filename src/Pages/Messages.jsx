@@ -96,9 +96,9 @@ export default function MessagingInterface() {
   const recentMatches = [
     {
       id: 1,
-      name: "Anna",
+      name: "Kate",
       avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b977?w=100&h=100&fit=crop&crop=face",
+        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face",
     },
     {
       id: 2,
@@ -117,12 +117,6 @@ export default function MessagingInterface() {
       name: "Lisa",
       avatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
-    },
-    {
-      id: 5,
-      name: "Kate",
-      avatar:
-        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face",
     },
   ];
 
@@ -238,7 +232,7 @@ export default function MessagingInterface() {
   };
 
   return (
-    <div className="flex h-screen bg-white lg:px-12 p-4">
+    <div className="flex h-[95vh] bg-white lg:px-12 p-4">
       {/* Sidebar - Hidden on mobile when chat is open */}
       <div
         className={`w-full md:w-80 border-r border-gray-200 flex flex-col ${

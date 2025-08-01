@@ -3,19 +3,20 @@ import { FaApple, FaGoogle, FaEyeSlash } from "react-icons/fa";
 import CoupleImage from "../../assets/Couple.png"; // 👈 Your local image
 
 import Logo from "../../assets/Logo.png"; // 👈 Your local image
+import { Link } from "react-router-dom";
 
 const SignupPage = () => {
   return (
-    <div className="min-h-screen flex items-stretch p-4">
+    <div className="h-[100vh] grid lg:grid-cols-2  ">
       {/* Left Section */}
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-10 py-8 bg-white">
+      <div className="w-full  flex flex-col items-center justify-center px-10  bg-white">
         {/* Logo */}
         <div className="mb-6">
           <img src={Logo} alt="Logo" className="h-10" />
         </div>
 
         {/* Heading */}
-        <h2 className="text-2xl font-semibold mb-2">
+        <h2 className="text-2xl font-semibold mb-2 text-center">
           A meaningful connection is just a click away
         </h2>
         <p className="text-sm text-gray-500 mb-4">
@@ -74,27 +75,28 @@ const SignupPage = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
-          >
-            Next
-          </button>
+          <Link to="/OTP">
+            <button
+              type="submit"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
+            >
+              Next
+            </button>
+          </Link>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Already have an account?{" "}
-          <a href="#" className="text-purple-600 font-medium">
+          <Link to="/Login" className="text-purple-600 font-medium">
             Login
-          </a>
+          </Link>
         </p>
       </div>
 
       {/* Right Section - Local Image */}
-      <div
-        className="hidden md:block md:w-1/2 bg-cover bg-center rounded-l-[40px]"
-        style={{ backgroundImage: `url(${CoupleImage})` }}
-      />
+      <div className="hidden lg:block">
+        <img src={CoupleImage} className="h-[100vh] w-full " />
+      </div>
     </div>
   );
 };

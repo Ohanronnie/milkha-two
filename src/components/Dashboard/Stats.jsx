@@ -51,14 +51,12 @@ export default function Stats() {
 
   return (
     <div className=" p-4 md:p-12 bg-gray-100">
-      <div className="max-w-6xl mx-auto">
+      <div className=" mx-auto">
         {/* Welcome Header */}
         <div className="mb-8">
           <p className="text-sm text-gray-500 mb-2">Welcome back,</p>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Fatima
-            <br />
-            Al-Shami
+            Fatima Al-Shami
           </h1>
         </div>
 

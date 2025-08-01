@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import FilterBar from "../components/Search/FilterBar";
+import React from "react";
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
-import Profile from "../assets/Profile.png";
-import ProfileModal from "../components/Profile/ProfileModal";
-import SuggestedProfiles from "../components/Search/SuggestedProfiles";
+import Profile from "../../assets/Profile.png";
+import { Link } from "react-router-dom";
+import { LuMessagesSquare } from "react-icons/lu";
+import { useState } from "react";
+import ProfileModal from "../../components/Profile/ProfileModal";
 
 const profiles = [
   {
@@ -32,17 +33,17 @@ const profiles = [
   },
 ];
 
-const Search = () => {
+const MyLikes = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
 
   return (
     <div>
-      <FilterBar />
-      <h2 className="text-2xl px-12 font-semibold text-gray-700 mb-4">
-        Search Results...
-      </h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 lg:px-12 px-4 py-12">
+      {" "}
+      <h2 className="text-2xl font-semibold text-gray-700 mb-4">My Likes</h2>
+      <p className="text-purple-500 pb-8">
+        A List of Potential Suitors you Liked.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {profiles.map((profile, index) => (
           <div
             key={index}
@@ -73,6 +74,7 @@ const Search = () => {
                 <FaMapMarkerAlt className="mr-1 text-green-500" />
                 {profile.location}
               </div>
+
               <div className="flex items-center justify-between text-xs mb-4">
                 <span className="text-green-500 font-semibold flex items-center gap-1">
                   <FaCheckCircle className="text-sm" />
@@ -80,13 +82,21 @@ const Search = () => {
                 </span>
                 <FaHeart className="text-gray-300" />
               </div>
+
               {/* View Profile Button */}
-              <button
-                onClick={() => setSelectedProfile(profile)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md"
-              >
-                View Profile
-              </button>
+              <div className="inline-flex w-full gap-2">
+                <button
+                  onClick={() => setSelectedProfile(profile)}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2 rounded-md"
+                >
+                  View Profile
+                </button>
+                {/* <Link to="/Messages">
+                  <button className="w-full px-6 text-purple-500 border border-purple-500 text-xs font-semibold py-2 rounded-md">
+                    <LuMessagesSquare className="text-xl" />
+                  </button>
+                </Link> */}
+              </div>
               {selectedProfile && (
                 <ProfileModal
                   profile={selectedProfile}
@@ -97,9 +107,8 @@ const Search = () => {
           </div>
         ))}
       </div>
-      <SuggestedProfiles />
     </div>
   );
 };
 
-export default Search;
+export default MyLikes;

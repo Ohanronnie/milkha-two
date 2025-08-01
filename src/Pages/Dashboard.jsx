@@ -13,10 +13,11 @@ const Dashboard = () => {
         <div className="lg:col-span-1 col-span-3">
           <ActivityFeed />
         </div>
-        <div className="lg:col-span-2 col-span-3">
+        <div className="lg:col-span-2 col-span-3 pb-">
           <ProfileEnhancement />
         </div>
       </div>
+      <div className="h-[20vh]" />
     </div>
   );
 };
