@@ -1,5 +1,8 @@
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
 import Profile from "../assets/Profile.png";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../utils/axios";
+import toast from "react-hot-toast";
 
 const profiles = [
   {
@@ -29,13 +32,25 @@ const profiles = [
 ];
 
 const ShortlistedProfiles = () => {
+  const [profiles, setProfiles] = useState(null);
+
+  useEffect(function () {
+    (async () => {
+      try {
+        const response = await axiosInstance.get("/matchmaking/shortlisted/");
+        setProfiles(response.data);
+      } catch (error) {
+        toast.error("error occured, reload page");
+      }
+    })();
+  }, []);
   return (
     <div className="bg-gray-50 lg:px-12 p-4">
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">
         Shortlisted Profiles
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {profiles.map((profile, index) => (
+        {!profiles? <h1>Nothing here yet</h1>: profiles.map((profile, index) => (
           <div
             key={index}
             className="bg-white rounded-xl overflow-hidden shadow-sm relative"
@@ -43,8 +58,8 @@ const ShortlistedProfiles = () => {
             {/* Profile Image */}
             <div className="relative">
               <img
-                src={profile.image}
-                alt={profile.name}
+                src={profile.photo}
+                alt={profile.fullname}
                 className="w-full h-64 object-cover"
               />
               {/* Completion Badge */}
@@ -57,19 +72,19 @@ const ShortlistedProfiles = () => {
             <div className="p-4">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-md font-semibold text-gray-800">
-                  {profile.name}
+                  {profile.fullname}
                 </h3>
                 <p className="text-sm text-gray-500">{profile.age} YRS</p>
               </div>
               <div className="flex items-center text-sm text-gray-600 mb-2">
                 <FaMapMarkerAlt className="mr-1 text-green-500" />
-                {profile.location}
+                {profile.emirate}
               </div>
 
               <div className="flex items-center justify-between text-xs mb-4">
                 <span className="text-green-500 font-semibold flex items-center gap-1">
                   <FaCheckCircle className="text-sm" />
-                  {profile.status}
+                  {profile.marital_status}
                 </span>
                 <FaHeart className="text-gray-300" />
               </div>

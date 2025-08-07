@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaStar, FaHeart, FaChevronDown } from "react-icons/fa";
 
-export default function FilterBar() {
+export default function FilterBar({ filters, setFilters }) {
   const [selectedFilters, setSelectedFilters] = useState({
     location: false,
     rating: false,
@@ -35,9 +35,10 @@ export default function FilterBar() {
               onClick={() => toggleFilter("location")}
               icon={<FaMapMarkerAlt className="w-4 h-4" />}
               label="Location"
+              setFilters={setFilters}
+              filters={filters}
             />
 
-            {/* Hobbies */}
             <FilterButton
               active={selectedFilters.rating}
               onClick={() => toggleFilter("rating")}
@@ -77,8 +78,10 @@ export default function FilterBar() {
             </span>
             <div className="relative w-full md:w-auto">
               <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                value={filters?.sortBy}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, sortBy: e.target.value }))
+                }
                 className="appearance-none w-full bg-white border border-gray-200 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option>Top matches</option>
@@ -100,7 +103,16 @@ export default function FilterBar() {
           <PopupCard title="Location">
             {["Abu Dhabi", "Dubai"].map((loc) => (
               <label key={loc} className="block text-sm">
-                <input type="checkbox" className="mr-2" /> {loc}
+                <input
+                  onClick={() =>
+                    setFilters((prev) => ({ ...prev, location: loc }))
+                  }
+                  type="radio"
+                  checked={filters?.location === loc}
+                  name="location"
+                  className="mr-2"
+                />{" "}
+                {loc}
               </label>
             ))}
           </PopupCard>
@@ -113,7 +125,12 @@ export default function FilterBar() {
                 (hobby) => (
                   <span
                     key={hobby}
-                    className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full"
+                    onClick={() =>
+                      setFilters((prev) => ({ ...prev, interests: hobby }))
+                    }
+                    className={`text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full ${
+                      filters?.interests == hobby && "opacity-50"
+                    }`}
                   >
                     {hobby}
                   </span>
@@ -125,31 +142,45 @@ export default function FilterBar() {
 
         {selectedFilters.price && (
           <PopupCard title="Select Age Range">
-            {["18–20 yrs", "20–25 yrs", "25–35 yrs", "50–60 yrs"].map((age) => (
+            {["18-20", "20-25", "25-35", "50-60"].map((age) => (
               <label key={age} className="block text-sm">
-                <input type="checkbox" className="mr-2" /> {age}
+                <input
+                  type="radio"
+                  onChange={() => setFilters((prev) => ({ ...prev, age }))}
+                  checked={filters.age === age}
+                  name="age"
+                  className="mr-2"
+                />{" "}
+                {age} years
               </label>
             ))}
           </PopupCard>
         )}
 
-        {selectedFilters.filters && (
+        {/*  {selectedFilters.filters && (
           <PopupCard title="Religion">
             {["Islam", "Christianity", "Hinduism", "Open to all Faiths"].map(
               (r) => (
                 <label key={r} className="block text-sm">
-                  <input type="checkbox" className="mr-2" /> {r}
+                  <input type="radio" className="mr-2" /> {r}
                 </label>
               )
             )}
           </PopupCard>
-        )}
+        )} */}
 
         {selectedFilters.wishlist && (
           <PopupCard title="Marital Status">
             {["Single", "Divorced", "Widowed"].map((status) => (
               <label key={status} className="block text-sm">
-                <input type="checkbox" className="mr-2" /> {status}
+                <input
+                  type="radio"
+                  onChange={() => setFilters((prev) => ({ ...prev, status }))}
+                  checked={filters.status === status}
+                  name="marital_status"
+                  className="mr-2"
+                />{" "}
+                {status}
               </label>
             ))}
           </PopupCard>
@@ -186,9 +217,5 @@ const PopupCard = ({ title, children }) => (
   <div className="bg-white shadow-md rounded-md p-4 w-full sm:max-w-md md:max-w-lg">
     <p className="font-medium text-sm mb-2">{title}</p>
     {children}
-    <div className="flex justify-between mt-3 text-xs text-gray-500">
-      <button>Clear All</button>
-      <button className="text-blue-600 font-medium">Apply</button>
-    </div>
   </div>
 );

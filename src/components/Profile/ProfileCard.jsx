@@ -1,21 +1,38 @@
 import { FaCheckCircle } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import DefaultProfile from "../../assets/Profile.png";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { axiosInstance } from "../../utils/axios";
+import toast from "react-hot-toast";
 
-export default function ProfileCard() {
+export default function ProfileCard({ userDetails }) {
   const fileInputRef = useRef(null);
-  const [imageSrc, setImageSrc] = useState(DefaultProfile);
-
+  const [imageSrc, setImageSrc] = useState(
+    
+      DefaultProfile
+  );
+  useEffect(() => {
+    setImageSrc(userDetails?.photos?.find?.((val) => val.is_primary)?.photo);
+  },[userDetails])
   const handleIconClick = () => {
     fileInputRef.current.click(); // Trigger hidden file input
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImageSrc(imageUrl);
+  const handleImageChange = async (e) => {
+    try {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setImageSrc(imageUrl);
+      }
+      formData.append("photo", file);
+      formData.append("is_primary", true);
+
+      await axiosInstance.post("/profile/photos/upload/", formData);
+      toast.success("Profile picture changed successfully")
+    } catch (error) {
+      toast.error("Profile picture upload failed, retry");
     }
   };
   return (
@@ -52,25 +69,25 @@ export default function ProfileCard() {
           {/* User Info */}
           <div className="flex-1 lg:mt-36">
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-semibold">Odrea Azur</h2>
+              <h2 className="text-2xl font-semibold">{userDetails?.first_name + " " + userDetails?.last_name}</h2>
               <FaCheckCircle className="text-blue-500" />
             </div>
 
             <div className="mt-4 flex flex-col sm:flex-row gap-6 text-sm text-gray-600">
               <div className="flex flex-col">
                 <span className="uppercase text-xs text-gray-400">Gender</span>
-                <span>Male</span>
+                <span>{userDetails?.gender}</span>
               </div>
               <div className="flex flex-col">
                 <span className="uppercase text-xs text-gray-400">Age</span>
-                <span>27 Years</span>
+                <span>{new Date().getFullYear() - new Date(userDetails?.date_of_birth).getFullYear() } Years</span>
               </div>
               <div className="flex flex-col relative">
                 <span className="uppercase text-xs text-gray-400">
                   Location
                 </span>
                 <span className="flex items-center gap-1">
-                  Abu Dhabi, UAE
+                  {userDetails?.emirate + ", "+userDetails?.country_of_residence }
                   <FiEdit2 className="text-gray-500 w-3 h-3 ml-1" />
                 </span>
               </div>

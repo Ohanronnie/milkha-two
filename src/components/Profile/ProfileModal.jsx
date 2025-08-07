@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaChevronDown, FaHeart, FaStar } from "react-icons/fa";
+import { axiosInstance } from "../../utils/axios";
+import toast from "react-hot-toast";
 
 const Section = ({ title, children, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
@@ -28,7 +30,23 @@ const FullProfileModal = ({ profile, onClose }) => {
     // Delay class toggle to trigger animation
     setTimeout(() => setShow(true), 20);
   }, []);
-
+  const likeOrShortlist = (type) => {
+    return async () => {
+      if(type === "like"){
+        try {
+          await axiosInstance.post("/matchmaking/like/"+profile.id)
+        } catch(error){
+          toast.error("Error liking user, retry later!")
+        }
+      } else {
+        try {
+          await axiosInstance.post("/matchmaking/shortlist/" + profile.id);
+        } catch (error) {
+          toast.error("Error shortlisting user, retry later!");
+        }
+      }
+    }
+  }
   if (!profile) return null;
 
   return (
@@ -59,8 +77,8 @@ const FullProfileModal = ({ profile, onClose }) => {
           <div className="flex flex-col items-center p-6 pt-10">
             <div className="relative mb-4">
               <img
-                src={profile.image}
-                alt={profile.name}
+                src={profile.photo}
+                alt={profile.fullname}
                 className="rounded-2xl w-40 h-48 object-cover shadow-md"
               />
               <span className="absolute top-2 right-[-10px] bg-purple-500 text-white text-xs px-3 py-1 rounded-full shadow">
@@ -69,19 +87,19 @@ const FullProfileModal = ({ profile, onClose }) => {
             </div>
 
             <h2 className="text-xl font-bold text-gray-800 mb-1">
-              {profile.name}
+              {profile.fullname}
             </h2>
             <p className="text-sm text-gray-500 mb-2">
               {profile.age} YRS |{" "}
               <FaMapMarkerAlt className="inline mr-1 text-purple-500" />
-              {profile.location}
+              {profile.emirate}
             </p>
 
             <div className="flex gap-3 mb-4">
-              <button className="bg-pink-100 text-pink-600 px-4 py-1 rounded-full flex items-center gap-2 text-sm font-semibold hover:bg-pink-200">
+              <button onClick={likeOrShortlist("like")} className="bg-pink-100 text-pink-600 px-4 py-1 rounded-full flex items-center gap-2 text-sm font-semibold hover:bg-pink-200">
                 <FaHeart /> Like
               </button>
-              <button className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full flex items-center gap-2 text-sm font-semibold hover:bg-blue-200">
+              <button onClick={likeOrShortlist("shortlist")} className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full flex items-center gap-2 text-sm font-semibold hover:bg-blue-200">
                 <FaStar /> Shortlisted
               </button>
             </div>
@@ -90,9 +108,8 @@ const FullProfileModal = ({ profile, onClose }) => {
           {/* Content */}
           <div className="px-6 pb-10">
             <Section title="About Khalid" defaultOpen>
-              I’m passionate about exploring new cultures and staying active. I
-              want to meet someone to fall in love with me for who I really am.
-            </Section>
+             {profile?.bio}
+              </Section>
 
             <Section title="Interests">
               <div className="flex flex-wrap gap-2">
@@ -111,11 +128,11 @@ const FullProfileModal = ({ profile, onClose }) => {
 
             <Section title="Personal Information">
               <div className="text-sm text-gray-700 space-y-1">
-                <p>
+                {/*<p>
                   <strong>Religion:</strong> Islam
-                </p>
+                </p>*/}
                 <p>
-                  <strong>Marital Status:</strong> Never Married
+                  <strong>Marital Status:</strong> {profile.marital_status}
                 </p>
                 <p>
                   <strong>Occupation:</strong> Entrepreneur

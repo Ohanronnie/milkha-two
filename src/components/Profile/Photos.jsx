@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiUpload, FiTrash2 } from "react-icons/fi";
+import { axiosInstance } from "../../utils/axios";
+import toast from "react-hot-toast";
 
-export default function PhotoUploader() {
+export default function PhotoUploader({ userDetails }) {
   const [images, setImages] = useState([null, null, null, null]);
 
   const handleImageUpload = (e, index) => {
@@ -10,13 +12,32 @@ export default function PhotoUploader() {
       const newImages = [...images];
       newImages[index] = URL.createObjectURL(file);
       setImages(newImages);
+      const formData = new FormData();
+
+      formData.append("photo", file);
+     
+      axiosInstance
+        .post("/profile/photos/upload/", formData)
+        .then((_) => toast.success("Image uploaded successfully"))
+        .catch((e) =>
+          toast.error("Error occurred while uploading profile, retry.")
+        );
     }
   };
-
+  useEffect(
+    function () {
+      userDetails && setImages([...userDetails?.photos?.map?.((v) => v.photo),null,null,null,null].slice(0,4));
+    },
+    [userDetails]
+  );
   const handleDelete = (index) => {
     const newImages = [...images];
     newImages[index] = null;
     setImages(newImages);
+    axiosInstance
+      .delete("/profile/photos/delete/" + index + "/")
+      .then((_) => toast.success("Image deleted successfully"))
+      .catch((error) => toast.error("Error occurred retry"));
   };
 
   return (
@@ -24,7 +45,7 @@ export default function PhotoUploader() {
       <h3 className="text-sm font-semibold text-gray-700">Photos</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {images.map((image, index) => (
+        {images?.map((image, index) => (
           <div
             key={index}
             className="relative border-2 border-dashed border-purple-300 rounded-lg w-full h-48 flex justify-center items-center bg-white overflow-hidden"

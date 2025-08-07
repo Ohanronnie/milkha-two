@@ -1,11 +1,37 @@
-import React from "react";
 import { FaApple, FaGoogle, FaEyeSlash } from "react-icons/fa";
 import CoupleImage from "../../assets/Couple.png"; // 👈 Your local image
 
 import Logo from "../../assets/Logo.png"; // 👈 Your local image
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../../utils/axios";
 
 const Login = () => {
+  const [details, setDetails] = useState({});
+  const [errors, setErrors] = useState(null);
+  const navigate = useNavigate()
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setDetails((prev) => ({ ...prev, [name]: value }));
+  };
+  useEffect(function () {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setErrors(null);
+      const response = await axiosInstance.post("/auth/login/", details);
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
+      navigate('/')
+    } catch (err) {
+      const res = err.response;
+      setErrors(res?.data?.non_field_errors);
+    } 
+  };
   return (
     <div className="h-[100vh] grid lg:grid-cols-2  ">
       {/* Left Section */}
@@ -41,12 +67,16 @@ const Login = () => {
         </div>
 
         {/* Email Signup Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="text-sm font-medium">Email Address*</label>
             <input
               type="email"
               placeholder="hello@gmail.com"
+              name="email"
+              value={details.email}
+              onChange={handleChange}
+              required
               className="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
@@ -57,20 +87,25 @@ const Login = () => {
               <input
                 type="password"
                 placeholder="••••••••"
+                name="password"
+                value={details.password}
+                onChange={handleChange}
+                required
+                minLength={6}
                 className="w-full border rounded px-3 py-2 mt-1 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <FaEyeSlash className="absolute right-3 top-3 text-gray-400" />
             </div>
           </div>
-
-          <Link to="/">
-            <button
-              type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
-            >
-              Login
-            </button>
-          </Link>
+          {errors && (
+            <p className="text-red-600 text-sm text-center">{errors}</p>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
+          >
+            Login
+          </button>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">

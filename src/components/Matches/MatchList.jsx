@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
 import Profile from "../../assets/Profile.png";
 import { Link } from "react-router-dom";
 import { LuMessagesSquare } from "react-icons/lu";
 import { useState } from "react";
 import ProfileModal from "../../components/Profile/ProfileModal";
-
+import { axiosInstance } from "../../utils/axios";
+import toast, { Toaster } from "react-hot-toast";
 const profiles = [
   {
     name: "Odrea Azur",
@@ -35,9 +36,23 @@ const profiles = [
 
 const MatchList = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [matches, setMatches] = useState(null);
 
+  useEffect(function(){
+
+  (async ()=> {
+    try {
+      const response = await axiosInstance.get("/profile/matches/search");
+      setMatches(response.data)
+    } catch(error){
+      console.error(error);
+      toast.error("Error occured somewhere, try reloading!")
+    }
+  })()
+  },[])
   return (
     <div>
+      <Toaster />
       {" "}
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">
         Matched Profiles
@@ -46,7 +61,7 @@ const MatchList = () => {
         A List of Potential Dates you have matched with
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {profiles.map((profile, index) => (
+        {!matches || matches?.length === 0 ?  <h1>Nothing here yet</h1> : matches.map((profile, index) => (
           <div
             key={index}
             className="bg-white rounded-xl overflow-hidden shadow-sm relative"
@@ -54,8 +69,8 @@ const MatchList = () => {
             {/* Profile Image */}
             <div className="relative">
               <img
-                src={profile.image}
-                alt={profile.name}
+                src={profile.photo}
+                alt={profile.fullname}
                 className="w-full h-64 object-cover"
               />
               {/* Completion Badge */}
@@ -68,19 +83,19 @@ const MatchList = () => {
             <div className="p-4">
               <div className="flex justify-between items-center mb-1">
                 <h3 className="text-md font-semibold text-gray-800">
-                  {profile.name}
+                  {profile.fullname}
                 </h3>
                 <p className="text-sm text-gray-500">{profile.age} YRS</p>
               </div>
               <div className="flex items-center text-sm text-gray-600 mb-2">
                 <FaMapMarkerAlt className="mr-1 text-green-500" />
-                {profile.location}
+                {`${profile.country_of_residence}, ${profile.emirate}`}
               </div>
 
               <div className="flex items-center justify-between text-xs mb-4">
                 <span className="text-green-500 font-semibold flex items-center gap-1">
                   <FaCheckCircle className="text-sm" />
-                  {profile.status}
+                  {profile.marital_status}
                 </span>
                 <FaHeart className="text-gray-300" />
               </div>

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaHeart, FaComments, FaStar } from "react-icons/fa";
+import { axiosInstance } from "../../utils/axios";
 
 const StatCard = ({ icon, title, count, subtitle, bgColor, iconColor }) => (
   <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
@@ -18,13 +19,14 @@ const StatCard = ({ icon, title, count, subtitle, bgColor, iconColor }) => (
   </div>
 );
 
-export default function Stats() {
+export default function Stats({ details, matchCounts: matchesCount , chats}) {
+ 
   const stats = [
     {
       id: 1,
       icon: <FaHeart className="w-6 h-6" />,
       title: "Matches",
-      count: "284",
+      count: matchesCount?.mutual_matches,
       subtitle: "+5.1% from previous week",
       bgColor: "bg-purple-100",
       iconColor: "text-purple-600",
@@ -33,7 +35,7 @@ export default function Stats() {
       id: 2,
       icon: <FaComments className="w-6 h-6" />,
       title: "Active Chats",
-      count: "14",
+      count: chats?.length,
       subtitle: "+2.1% from previous week",
       bgColor: "bg-blue-100",
       iconColor: "text-blue-600",
@@ -42,7 +44,7 @@ export default function Stats() {
       id: 3,
       icon: <FaStar className="w-6 h-6" />,
       title: "Shortlisted Profiles",
-      count: "14",
+      count: matchesCount?.shortlisted,
       subtitle: "+8.7% from previous week",
       bgColor: "bg-green-100",
       iconColor: "text-green-600",
@@ -56,7 +58,7 @@ export default function Stats() {
         <div className="mb-8">
           <p className="text-sm text-gray-500 mb-2">Welcome back,</p>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Fatima Al-Shami
+            {details?.first_name ? details?.first_name + " " + details?.last_name : "User"}
           </h1>
         </div>
 

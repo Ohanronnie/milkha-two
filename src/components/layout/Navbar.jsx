@@ -10,13 +10,15 @@ import {
 import { HiOutlineViewGrid } from "react-icons/hi";
 import Logo from "../../assets/Logo.png";
 import Profile from "../../assets/Profile.png";
+import { axiosInstance } from "../../utils/axios";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const location = useLocation(); // ✅ Get current path
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -26,7 +28,11 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  useEffect(() => {
+    axiosInstance.get("/profile").then(({ data }) => {
+      setUserDetails(data)
+    }).catch(e => toast.error("error occurred somewhere"))
+  }, []);
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -98,11 +104,14 @@ const Navbar = () => {
                 className="flex items-center space-x-2 focus:outline-none"
               >
                 <img
-                  src={Profile}
+                  src={
+                    userDetails?.photos.find((e) => e.is_primary)?.photo ||
+                    Profile
+                  }
                   alt="Avatar"
                   className="h-8 w-8 rounded-full object-cover"
                 />
-                <span className="text-sm">Sophia ▾</span>
+                <span className="text-sm">{userDetails?.first_name} ▾</span>
               </button>
 
               {/* Dropdown Menu */}
@@ -194,11 +203,11 @@ const Navbar = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <img
-                src={Profile}
+                src={ userDetails?.photos.find((e) => e.is_primary)?.photo  || Profile}
                 alt="User"
                 className="h-8 w-8 rounded-full object-cover"
               />
-              <span className="text-sm">Sophia</span>
+              <span className="text-sm">{userDetails?.first_name}</span>
             </div>
             <Link to="/Notifications">
               <FiBell className="text-xl cursor-pointer" />

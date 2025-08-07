@@ -39,7 +39,7 @@ const ShortlistedProfile = ({ name }) => (
   </div>
 );
 
-const TodaysMatches = () => {
+const TodaysMatches = ({ matches, shortlisted }) => {
   const profiles = [
     {
       name: "Odrea Azur",
@@ -74,60 +74,71 @@ const TodaysMatches = () => {
         <p className="text-2xl font-medium ">Today's Matches</p>
         <p className="pb-6"> Based on your prefrences</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-          {profiles.map((profile, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl overflow-hidden shadow-sm relative"
-            >
-              {/* Profile Image */}
-              <div className="relative">
-                <img
-                  src={profile.image}
-                  alt={profile.name}
-                  className="w-full h-64 object-cover"
-                />
-                {/* Completion Badge */}
-                <span className="absolute top-2 right-2 bg-white text-xs font-semibold text-gray-700 px-2 py-1 rounded-full shadow">
-                  {profile.completion}% COMPLETED
-                </span>
-              </div>
-
-              {/* Profile Details */}
-              <div className="p-4">
-                <div className="flex justify-between items-center mb-1">
-                  <h3 className="text-md font-semibold text-gray-800">
-                    {profile.name}
-                  </h3>
-                  <p className="text-sm text-gray-500">{profile.age} YRS</p>
-                </div>
-                <div className="flex items-center text-sm text-gray-600 mb-2">
-                  <FaMapMarkerAlt className="mr-1 text-green-500" />
-                  {profile.location}
-                </div>
-
-                <div className="flex items-center justify-between text-xs mb-4">
-                  <span className="text-green-500 font-semibold flex items-center gap-1">
-                    <FaCheckCircle className="text-sm" />
-                    {profile.status}
+          {!matches || matches?.length === 0 ? (
+            <h1>Nothing here yet</h1>
+          ) : (
+            matches?.map((profile, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl overflow-hidden shadow-sm relative"
+              >
+                {/* Profile Image */}
+                <div className="relative">
+                  <img
+                    src={profile.photo}
+                    alt={profile.fullname}
+                    className="w-full h-64 object-cover"
+                  />
+                  {/* Completion Badge */}
+                  <span className="absolute top-2 right-2 bg-white text-xs font-semibold text-gray-700 px-2 py-1 rounded-full shadow">
+                    {profile.completion}% COMPLETED
                   </span>
-                  <FaHeart className="text-gray-300" />
                 </div>
 
-                {/* View Profile Button */}
-                <button className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md">
-                  View Profile
-                </button>
+                {/* Profile Details */}
+                <div className="p-4">
+                  <div className="flex justify-between items-center mb-1">
+                    <h3 className="text-md font-semibold text-gray-800">
+                      {profile.fullname}
+                    </h3>
+                    <p className="text-sm text-gray-500">{profile.age} YRS</p>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600 mb-2">
+                    <FaMapMarkerAlt className="mr-1 text-green-500" />
+                    {profile.emirate + ", " + profile.country_of_residence}
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs mb-4">
+                    <span className="text-green-500 font-semibold flex items-center gap-1">
+                      <FaCheckCircle className="text-sm" />
+                      {profile.marital_status}
+                    </span>
+                    <FaHeart className="text-gray-300" />
+                  </div>
+
+                  {/* View Profile Button */}
+                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md">
+                    View Profile
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
       {/* Shortlisted Profiles */}
-      <div className="w-full h-[490px] bg-white  p-4 shadow rounded-lg ">
+      <div className="w-full bg-white  p-4 shadow rounded-lg ">
         <h2 className="text-lg font-semibold mb-4">Shortlisted Profiles</h2>
-        {[1, 2, 3].map((_, idx) => (
-          <ShortlistedProfile key={idx} name="Sarah Kate" />
-        ))}
+        { !shortlisted || shortlisted?.length === 0 ? (
+          <h1>Nothing here yet</h1>
+        ) : (
+          shortlisted?.map?.((data, idx) => (
+            <ShortlistedProfile
+              key={data?.matched_user}
+              name={data?.matched_profile}
+            />
+          ))
+        )}
       </div>
     </div>
   );

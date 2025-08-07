@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import Profile from "./Pages/Profile";
 import ShortlistedProfiles from "./Pages/ShortlistedProfiles";
@@ -17,7 +22,12 @@ import Navbar from "./components/layout/Navbar";
 
 import Layout from "./components/layout/Layout";
 import Matches from "./Pages/Matches";
-
+import { axiosInstance } from "./utils/axios";
+const ProtectedRoute = ({ children }) => {
+  const access = localStorage.getItem("access_token");
+  if (!access) return <Navigate to="/login" replace />;
+  return children;
+};
 function App() {
   return (
     <>
@@ -33,23 +43,83 @@ function App() {
           <Route path="/RegistrationForms" element={<StepperForm />} />
 
           <Route element={<Layout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/Match" element={<MatchModal />} />
+            <Route
+              path="/Match"
+              element={
+                <ProtectedRoute>
+                  <MatchModal />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/ShortlistedProfiles"
-              element={<ShortlistedProfiles />}
+              element={
+                <ProtectedRoute>
+                  <ShortlistedProfiles />
+                </ProtectedRoute>
+              }
             />
 
-            <Route path="/Matches" element={<Matches />} />
-            <Route path="/Messages" element={<MessagingInterface />} />
-            <Route path="/Settings" element={<Settings />} />
+            <Route
+              path="/Matches"
+              element={
+                <ProtectedRoute>
+                  <Matches />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Messages"
+              element={
+                <ProtectedRoute>
+                  <MessagingInterface />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/Search" element={<Search />} />
+            <Route
+              path="/Search"
+              element={
+                <ProtectedRoute>
+                  <Search />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="/Notifications" element={<Notifications />} />
+            <Route
+              path="/Notifications"
+              element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
       </Router>

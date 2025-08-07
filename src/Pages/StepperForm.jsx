@@ -8,6 +8,7 @@ import {
   Step6,
   Step7,
 } from "../components/StepperForms/formSteps"; // Import all step components
+import { Toaster } from "react-hot-toast";
 
 const steps = [
   "About You",
@@ -22,39 +23,94 @@ const steps = [
 const StepperForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Optional mobile sidebar toggle
+  const [details, setDetails] = useState({
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 0:
-        return <Step1 />;
-      case 1:
-        return <Step2 />;
-      case 2:
-        return <Step3 />;
-      case 3:
-        return <Step4 />;
-      case 4:
-        return <Step5 />;
-      case 5:
-        return <Step6 />;
-      case 6:
-        return <Step7 />;
-      default:
-        return null;
-    }
-  };
+  });
+  const [nextable, setNextAble] = useState(null);
 
   const next = () => {
-    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
+    const number = steps.length - 1;
+    if (currentStep < number) setCurrentStep(currentStep + 1);
   };
 
   const prev = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <Step1
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 1:
+        return (
+          <Step2
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 2:
+        return (
+          <Step3
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 3:
+        return (
+          <Step4
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 4:
+        return (
+          <Step5
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 5:
+        return (
+          <Step6
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      case 6:
+        return (
+          <Step7
+            details={details}
+            setDetails={setDetails}
+            next={next}
+            prev={prev}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-50">
       {/* Sidebar */}
+      <Toaster />
       <div className="md:w-64 w-full bg-white p-4 md:p-6 border-b md:border-r">
         <h2 className="text-xl font-bold mb-4 md:mb-6">Personal</h2>
         <ul className="grid grid-cols-2 md:block gap-4 text-xs md:text-sm">
@@ -94,35 +150,7 @@ const StepperForm = () => {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between gap-4">
-          <button
-            disabled={currentStep === 0}
-            onClick={prev}
-            className={`px-6 py-2 rounded text-white w-full sm:w-auto ${
-              currentStep === 0
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-purple-500 hover:bg-purple-600"
-            }`}
-          >
-            Previous
-          </button>
 
-          {currentStep === steps.length - 1 ? (
-            <button
-              onClick={() => alert("Form submitted!")}
-              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded w-full sm:w-auto"
-            >
-              Finish
-            </button>
-          ) : (
-            <button
-              onClick={next}
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded w-full sm:w-auto"
-            >
-              Next
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );
