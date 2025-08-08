@@ -3,6 +3,7 @@ import Profile from "../assets/Profile.png";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../utils/axios";
 import toast from "react-hot-toast";
+import Loading from "../components/layout/LoadingOrNull";
 
 const profiles = [
   {
@@ -50,7 +51,7 @@ const ShortlistedProfiles = () => {
         Shortlisted Profiles
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {!profiles? <h1>Nothing here yet</h1>: profiles.map((profile, index) => (
+        {!profiles? <Loading data={profiles}/> : profiles.map((profile, index) => (
           <div
             key={index}
             className="bg-white rounded-xl overflow-hidden shadow-sm relative"

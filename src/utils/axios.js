@@ -20,6 +20,9 @@ function getAuthHeaders() {
 let isRefreshing = false;
 
 axiosInstance.interceptors.request.use((config) => {
+  if(!config.url.endsWith("/")){
+    config.url = config.url + "/"
+  }
   config.headers = {
     ...config.headers,
     ...getAuthHeaders(), // ensure token is fresh every request

@@ -9,6 +9,7 @@ import { axiosInstance } from "../../utils/axios";
 const Login = () => {
   const [details, setDetails] = useState({});
   const [errors, setErrors] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const handleChange = (e) => {
     const name = e.target.name;
@@ -23,11 +24,13 @@ const Login = () => {
     e.preventDefault();
     try {
       setErrors(null);
+      setIsSubmitting(true)
       const response = await axiosInstance.post("/auth/login/", details);
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
       navigate('/')
     } catch (err) {
+      setIsSubmitting(false)
       const res = err.response;
       setErrors(res?.data?.non_field_errors);
     } 
@@ -104,7 +107,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
           >
-            Login
+            {isSubmitting ? "Loading..." : "Login"}
           </button>
         </form>
 

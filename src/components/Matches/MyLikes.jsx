@@ -6,6 +6,7 @@ import { LuMessagesSquare } from "react-icons/lu";
 import { useState } from "react";
 import ProfileModal from "../../components/Profile/ProfileModal";
 import { axiosInstance } from "../../utils/axios";
+import Loading from "../layout/LoadingOrNull";
 
 const profiles = [
   {
@@ -52,8 +53,8 @@ const MyLikes = () => {
         A List of Potential Suitors you Liked.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {!likes || likes?.length === 0 ? (
-          <h1>Nothing here yet</h1>
+        {!likes ? (
+          <Loading data={likes} />
         ) : (
           likes?.map((profile, index) => (
             <div

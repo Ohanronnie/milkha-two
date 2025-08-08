@@ -7,6 +7,7 @@ import { useState } from "react";
 import ProfileModal from "../../components/Profile/ProfileModal";
 import { axiosInstance } from "../../utils/axios";
 import toast, { Toaster } from "react-hot-toast";
+import Loading from "../layout/LoadingOrNull";
 const profiles = [
   {
     name: "Odrea Azur",
@@ -61,7 +62,7 @@ const MatchList = () => {
         A List of Potential Dates you have matched with
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {!matches || matches?.length === 0 ?  <h1>Nothing here yet</h1> : matches.map((profile, index) => (
+        {!matches ?  <Loading data={matches} /> : matches.map((profile, index) => (
           <div
             key={index}
             className="bg-white rounded-xl overflow-hidden shadow-sm relative"

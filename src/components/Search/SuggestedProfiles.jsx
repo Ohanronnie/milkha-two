@@ -1,5 +1,6 @@
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
 import Profile from "../../assets/Profile.png";
+import Loading from "../layout/LoadingOrNull";
 
 const profiles = [
   {
@@ -38,8 +39,8 @@ const SuggestedProfiles = ({ suggestedProfiles }) => {
         List of Potential Soulmates you might like.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {!suggestedProfiles || suggestedProfiles.length === 0 ? (
-          <h1>Nothing here yet</h1>
+        {!suggestedProfiles ? (
+          <Loading data={suggestedProfiles} />
         ) : (
           suggestedProfiles?.map?.((profile, index) => (
             <div

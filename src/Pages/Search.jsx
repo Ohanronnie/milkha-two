@@ -6,6 +6,7 @@ import ProfileModal from "../components/Profile/ProfileModal";
 import SuggestedProfiles from "../components/Search/SuggestedProfiles";
 import { axiosInstance } from "../utils/axios";
 import toast from "react-hot-toast";
+import Loading from "../components/layout/LoadingOrNull";
 
 const Search = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -56,8 +57,8 @@ const Search = () => {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 lg:px-12 px-4 py-12">
-        {!searchResult || searchResult.length === 0 ? (
-          <h1>Nothing here yet</h1>
+        {!searchResult ? (
+          <Loading data={searchResult} />
         ) : (
           searchResult?.map?.((profile, index) => (
             <div
