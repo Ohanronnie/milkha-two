@@ -312,10 +312,10 @@ export default function MessagingInterface() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                  {/*<div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                     <FaPaperclip className="text-gray-400 cursor-pointer hover:text-gray-600" />
                     <FaSmile className="text-gray-400 cursor-pointer hover:text-gray-600" />
-                  </div>
+                  </div>*/}
                 </div>
                 <button
                   onClick={handleSendMessage}
