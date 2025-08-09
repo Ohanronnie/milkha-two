@@ -25,6 +25,9 @@ import Matches from "./Pages/Matches";
 import { axiosInstance } from "./utils/axios";
 const ProtectedRoute = ({ children }) => {
   const access = localStorage.getItem("access_token");
+  axiosInstance.get("/profile").then(({ data})=> {
+    window.user = data;
+  });
   if (!access) return <Navigate to="/login" replace />;
   return children;
 };

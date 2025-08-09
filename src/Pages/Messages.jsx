@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaSearch,
   FaVideo,
@@ -8,6 +8,7 @@ import {
   FaSmile,
   FaPaperclip,
 } from "react-icons/fa";
+import { axiosInstance } from "../utils/axios";
 
 const RecentMatchItem = ({ avatar, name }) => (
   <div className="flex-shrink-0 text-center">
@@ -24,6 +25,7 @@ const ConversationItem = ({
   lastMessage,
   time,
   unreadCount,
+  conversation,
   isActive = false,
   onClick,
 }) => (
@@ -34,65 +36,85 @@ const ConversationItem = ({
     onClick={onClick}
   >
     <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
-      <img src={avatar} alt={name} className="w-full h-full object-cover" />
+      <img
+        src={conversation.other_user.photos?.find((v) => v.is_primary)?.photo}
+        alt={name}
+        className="w-full h-full object-cover"
+      />
     </div>
     <div className="flex-1 min-w-0">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-900 truncate">{name}</h3>
-        {unreadCount && (
+        <h3 className="text-sm font-medium text-gray-900 truncate">
+          {conversation.other_user.first_name +
+            " " +
+            conversation.other_user.last_name}
+        </h3>
+        {conversation.unread_count && (
           <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
-            {unreadCount}
+            {conversation.unread_count}
           </span>
         )}
       </div>
-      <p className="text-xs text-gray-500 truncate mt-1">{lastMessage}</p>
+      <p className="text-xs text-gray-500 truncate mt-1">
+        {conversation.last_message.content || "Nothing here yet"}
+      </p>
     </div>
   </div>
 );
 
-const MessageBubble = ({ message, isOwn, time, isTyping = false }) => (
-  <div className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-4`}>
-    <div
-      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-        isOwn
-          ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white"
-          : "bg-gray-100 text-gray-900"
-      }`}
-    >
-      {isTyping ? (
-        <div className="flex space-x-1">
-          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-          <div
-            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-            style={{ animationDelay: "0.1s" }}
-          ></div>
-          <div
-            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-            style={{ animationDelay: "0.2s" }}
-          ></div>
-        </div>
-      ) : (
-        <p className="text-sm">{message}</p>
-      )}
-      {time && (
-        <p
-          className={`text-xs mt-1 ${
-            isOwn ? "text-purple-100" : "text-gray-500"
-          }`}
-        >
-          {time}
-        </p>
-      )}
+const MessageBubble = ({ messages }) => {
+  if (!messages) return;
+  const { sender_profile, sender, content, sent_at } = messages;
+  let [message, time] = [content, sent_at];
+  time = new Date(time).toLocaleTimeString()
+  const isOwn = sender_profile?.id == window.user.id;
+  return (
+    <div className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-4`}>
+      <div
+        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+          isOwn
+            ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+            : "bg-gray-100 text-gray-900"
+        }`}
+      >
+        {false ? (
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+            <div
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.1s" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.2s" }}
+            ></div>
+          </div>
+        ) : (
+          <p className="text-sm">{message}</p>
+        )}
+        {time && (
+          <p
+            className={`text-xs mt-1 ${
+              isOwn ? "text-purple-100" : "text-gray-500"
+            }`}
+          >
+            {time}
+          </p>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function MessagingInterface() {
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState("Anna Hamidul");
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [showChat, setShowChat] = useState(false);
+  const [conversations, setConversations] = useState(null);
+  const [ws, setWs] = useState(null);
 
+  const [messages, setMessages] = useState(null);
   const recentMatches = [
     {
       id: 1,
@@ -120,98 +142,28 @@ export default function MessagingInterface() {
     },
   ];
 
-  const conversations = [
-    {
-      id: 1,
-      name: "Ali Rosa",
-      avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "2m",
-      unreadCount: null,
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "5m",
-      unreadCount: 3,
-    },
-    {
-      id: 3,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "1h",
-      unreadCount: 2,
-    },
-    {
-      id: 4,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "2h",
-      unreadCount: 1,
-    },
-    {
-      id: 5,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "3h",
-      unreadCount: 5,
-    },
-    {
-      id: 6,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "1d",
-      unreadCount: 2,
-    },
-    {
-      id: 7,
-      name: "Grant Anna",
-      avatar:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
-      lastMessage: "Your travel photos are amazing! Which camera do yo...",
-      time: "2d",
-      unreadCount: 1,
-    },
-  ];
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axiosInstance.get("/matchmaking/chat-rooms");
+        setConversations(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
-  const messages = [
-    {
-      id: 1,
-      message: "Hi there, how are you doing? I have a nice question",
-      isOwn: true,
-      time: "2:30 PM",
-    },
-    { id: 2, message: "Hello Miranda!", isOwn: false, time: "2:31 PM" },
-    {
-      id: 3,
-      message:
-        "Hello Miranda! Here are some nice latest holographic display technology?",
-      isOwn: false,
-      time: "2:32 PM",
-    },
-    { id: 4, message: "Hello Miranda!", isOwn: true, time: "2:33 PM" },
-    {
-      id: 5,
-      message:
-        "Hi Kelly, hello, how are you doing? I have a nice question about technology",
-      isOwn: true,
-      time: "2:34 PM",
-    },
-  ];
-
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (selectedConversation) {
+        const messages = await axiosInstance.get(
+          `/matchmaking/chat-rooms/${selectedConversation.id}/messages`
+        );
+        setMessages(messages.data);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [selectedConversation]);
   const handleConversationClick = (conversation) => {
     setSelectedConversation(conversation);
     setSelectedUser(conversation.name);
@@ -225,7 +177,15 @@ export default function MessagingInterface() {
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      // Handle sending message
+      axiosInstance
+        .post(
+          "/matchmaking/chat-rooms/" + selectedConversation.id + "/messages",
+          {
+            sender: window.user.id,
+            content: message,
+          }
+        )
+        .then(({ data }) => setMessages((prev) => [...prev, data]));
       console.log("Sending message:", message);
       setMessage("");
     }
@@ -246,7 +206,7 @@ export default function MessagingInterface() {
             <FaSearch className="text-gray-400 cursor-pointer" />
           </div>
 
-          {/* Recent matches */}
+          {/* Recent matches 
           <div>
             <p className="text-sm text-gray-500 mb-3">
               Recent matches you haven't messaged
@@ -256,15 +216,15 @@ export default function MessagingInterface() {
                 <RecentMatchItem key={match.id} {...match} />
               ))}
             </div>
-          </div>
+          </div>*/}
         </div>
 
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto">
-          {conversations.map((conversation) => (
+          {conversations?.map((conversation) => (
             <ConversationItem
               key={conversation.id}
-              {...conversation}
+              conversation={conversation}
               isActive={selectedConversation?.id === conversation.id}
               onClick={() => handleConversationClick(conversation)}
             />
@@ -304,32 +264,38 @@ export default function MessagingInterface() {
                 </button>
                 <div className="w-10 h-10 rounded-full overflow-hidden mr-3">
                   <img
-                    src={selectedConversation.avatar}
-                    alt={selectedConversation.name}
+                    src={
+                      selectedConversation.other_user.photos?.find(
+                        (v) => v.is_primary
+                      )?.photo
+                    }
+                    alt={selectedConversation.first_name}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
                   <h2 className="font-semibold text-gray-900">
-                    {selectedConversation.name}
+                    {selectedConversation.other_user.first_name +
+                      " " +
+                      selectedConversation.other_user.last_name}
                   </h2>
                   <p className="text-xs text-green-500">Online</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <FaVideo className="text-gray-400 cursor-pointer hover:text-gray-600" />
+              {/*}  <FaVideo className="text-gray-400 cursor-pointer hover:text-gray-600" />
                 <FaPhone className="text-gray-400 cursor-pointer hover:text-gray-600" />
                 <div className="text-gray-500 text-xs hidden sm:block">
                   View Profile
-                </div>
+                </div> */}
                 <FaEllipsisV className="text-gray-400 cursor-pointer hover:text-gray-600" />
               </div>
             </div>
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-              {messages.map((msg) => (
-                <MessageBubble key={msg.id} {...msg} />
+              {messages?.map((msg) => (
+                <MessageBubble key={msg.id} messages={msg} />
               ))}
               <MessageBubble isTyping={true} />
             </div>

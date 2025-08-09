@@ -54,7 +54,7 @@ const Login = () => {
           <span className="text-purple-600 underline">Privacy Policy</span>
         </p>
 
-        {/* OAuth Buttons */}
+        {/* OAuth Buttons 
         <div className="space-y-3">
           <div className="w-full px-20 flex items-center justify-center border rounded py-2 text-sm font-medium">
             <FaApple className="mr-2" /> Sign up with Apple
@@ -62,11 +62,11 @@ const Login = () => {
           <div className="w-full flex items-center justify-center border rounded py-2 text-sm font-medium">
             <FaGoogle className="mr-2" /> Sign up with Google
           </div>
-        </div>
+        </div>*/}
 
         {/* Divider */}
         <div className="my-4 text-center text-gray-400 text-sm">
-          OR SIGN UP WITH YOUR EMAIL
+          SIGN UP WITH YOUR EMAIL
         </div>
 
         {/* Email Signup Form */}
