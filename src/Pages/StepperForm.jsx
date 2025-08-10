@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Step1,
   Step2,
@@ -9,6 +9,7 @@ import {
   Step7,
 } from "../components/StepperForms/formSteps"; // Import all step components
 import { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   "About You",
@@ -23,9 +24,8 @@ const steps = [
 const StepperForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Optional mobile sidebar toggle
-  const [details, setDetails] = useState({
-
-  });
+  const [details, setDetails] = useState({});
+  const navigate = useNavigate();
   const [nextable, setNextAble] = useState(null);
 
   const next = () => {
@@ -36,6 +36,11 @@ const StepperForm = () => {
   const prev = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
+  useEffect(() => {
+    if (!localStorage.getItem("access_token")) {
+      navigate("/login", { replace: true });
+    }
+  }, []);
   const renderStep = () => {
     switch (currentStep) {
       case 0:
@@ -106,7 +111,6 @@ const StepperForm = () => {
     }
   };
 
-
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-gray-50">
       {/* Sidebar */}
@@ -150,7 +154,6 @@ const StepperForm = () => {
         </div>
 
         {/* Navigation Buttons */}
-
       </div>
     </div>
   );

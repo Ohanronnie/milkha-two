@@ -8,7 +8,7 @@ import { axiosInstance } from "../../utils/axios";
 const SignupPage = () => {
   const [details, setDetails] = useState({});
   const [errors, setErrors] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(null);
   const navigate = useNavigate();
   const handleChange = (e) => {
     const name = e.target.name;
@@ -21,15 +21,24 @@ const SignupPage = () => {
       return setErrors("Password not match");
     }
     try {
-      setIsSubmitting(true)
+      setIsSubmitting(true);
       const response = await axiosInstance.post("/auth/register/", details);
       toast.success("Verification code sent!");
       localStorage.setItem("email", btoa(details.email));
       navigate("/otp");
     } catch (error) {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
       const response = error?.response;
-      setErrors(response?.data?.non_field_errors)
+      response?.data?.non_field_errors
+        ? setErrors(response?.data?.non_field_errors)
+        : setErrors(
+            response?.data?.password1?.map((v) => (
+              <>
+                <span>{v}</span>
+                <br />
+              </>
+            ))
+          );
     }
   };
   useEffect(function () {

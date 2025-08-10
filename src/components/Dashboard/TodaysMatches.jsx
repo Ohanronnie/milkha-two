@@ -2,6 +2,7 @@ import React from "react";
 import { FiMessageSquare } from "react-icons/fi";
 import { FaCheckCircle, FaMapMarkerAlt, FaHeart } from "react-icons/fa";
 import Profile from "../../assets/Profile.png";
+import Loading from "../layout/LoadingOrNull";
 
 const ProfileCard = ({ name, age, location, imageUrl, match }) => (
   <div className="bg-white shadow rounded-lg p-4 w-64">
@@ -71,11 +72,11 @@ const TodaysMatches = ({ matches, shortlisted }) => {
     <div className="min-h-full bg-gray-100 p-6 grid lg:grid-cols-3 gap-4 lg:px-12 px-4">
       {/* Today's Matches */}
       <div className="lg:col-span-2">
-        <p className="text-2xl font-medium ">Today's Matches</p>
+        <p className="text-2xl font-medium ">Today's Matchesx</p>
         <p className="pb-6"> Based on your prefrences</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {!matches || matches?.length === 0 ? (
-            <h1>Nothing here yet</h1>
+            <Loading />
           ) : (
             matches?.map((profile, index) => (
               <div
@@ -130,7 +131,7 @@ const TodaysMatches = ({ matches, shortlisted }) => {
       <div className="w-full bg-white  p-4 shadow rounded-lg ">
         <h2 className="text-lg font-semibold mb-4">Shortlisted Profiles</h2>
         { !shortlisted || shortlisted?.length === 0 ? (
-          <h1>Nothing here yet</h1>
+          <Loading />
         ) : (
           shortlisted?.map?.((data, idx) => (
             <ShortlistedProfile

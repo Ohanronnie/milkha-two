@@ -23,13 +23,47 @@ import Navbar from "./components/layout/Navbar";
 import Layout from "./components/layout/Layout";
 import Matches from "./Pages/Matches";
 import { axiosInstance } from "./utils/axios";
+import { useEffect, useState } from "react";
+import { set } from "date-fns";
 const ProtectedRoute = ({ children }) => {
   const access = localStorage.getItem("access_token");
-  axiosInstance.get("/profile").then(({ data})=> {
-    window.user = data;
-  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axiosInstance.get("/profile");
+        if (!response.data || !response.data?.first_name) {
+          return setError(1);
+        }
+        window.user = response.data;
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        if (error.response && error.response.status === 404) {
+          setError(1);
+        } else {
+          setError(0);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkToken();
+  }, []);
   if (!access) return <Navigate to="/login" replace />;
-  return children;
+  if (!loading) {
+    if (error === 0) {
+      return <Navigate to="/login" replace />;
+    } else if (error === 1) {
+      return <Navigate to="/RegistrationForms" replace />;
+    } else if (!error) {
+
+      console.log(1234, error);
+      return children;
+    } else {
+      console.log(error)
+    }
+  }
 };
 function App() {
   return (

@@ -41,14 +41,24 @@ const OTP = () => {
         code: otps
       });
       toast.success("Successfully verified")
-      navigate("/RegistrationForms", {
+      navigate("/Login", {
         replace: true
       })
     } catch(error){
       toast.error(error.response?.data?.detail)
     }
    };
-
+   async function resendVerification(){
+     try {
+      const response = await axiosInstance.post("/auth/verify-email/", {
+        email,
+      });
+      toast.success("Sent successfully")
+     
+    } catch(error){
+      toast.error(error.response?.data?.detail)
+    }
+   }
   return (
     <div className="h-[100vh] grid lg:grid-cols-2  ">
       {/* Left Section */}
@@ -86,7 +96,7 @@ const OTP = () => {
        
         <p className="text-sm text-gray-500">
           Experiencing issues receiving your code?{" "}
-          <span className="text-purple-600 underline cursor-pointer">
+          <span onClick={() => resendVerification()} className="text-purple-600 underline cursor-pointer">
             Resend code
           </span>
         </p>
