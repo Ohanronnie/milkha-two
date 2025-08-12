@@ -66,7 +66,7 @@ const ProfileEnhancement = ({ details }) => {
       <div className="flex flex-col items-center text-center lg:w-1/3 w-full pb-8 lg-pb-0">
         <div className="relative">
           <img
-            src={details?.photos?.find?.(val => val.is_primary).photo || Profile}
+            src={details?.photos?.find?.(val => val.is_primary)?.photo || Profile}
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover"
           />
