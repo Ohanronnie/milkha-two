@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 const PhotoUploadStep = ({ details, setDetails, prev, next }) => {
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
     if (selected) {
@@ -77,14 +78,16 @@ const PhotoUploadStep = ({ details, setDetails, prev, next }) => {
       const formData = new FormData();
       formData.append("photo", fileInputRef.current.files[0]);
       formData.append("is_primary", true);
-        await axiosInstance.post("/profile/create/", filteredDetails);
-       await axiosInstance.post("/profile/photos/upload/", formData);
+      setLoading(true);
+      await axiosInstance.post("/profile/create/", filteredDetails);
+      await axiosInstance.post("/profile/photos/upload/", formData);
 
       await axiosInstance.put("/match-preferences/", filteredPartners);
       toast.success("Success");
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      toast.error("Error occurred when submitting, retry after some time")
+      setLoading(false)
+      toast.error("Error occurred when submitting, retry after some time");
     }
   };
 
@@ -145,8 +148,10 @@ const PhotoUploadStep = ({ details, setDetails, prev, next }) => {
           <button
             onClick={() => handleSubmit()}
             className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded w-full sm:w-auto"
+            disabled={loading}
+            
           >
-            Finish
+           {loading ? "Loading..." : "Finish"}
           </button>
         ) : (
           <button
