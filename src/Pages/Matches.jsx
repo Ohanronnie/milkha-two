@@ -7,6 +7,7 @@ import ProfileModal from "../components/Profile/ProfileModal";
 import LikedMe from "../components/Matches/LikedMe";
 import MyLikes from "../components/Matches/MyLikes";
 import MatchList from "../components/Matches/MatchList";
+import Loading from "../components/layout/LoadingOrNull";
 
 const profiles = [
   {
@@ -47,7 +48,7 @@ const Matches = () => {
       case "likes":
         return <MyLikes />;
       case "likedMe":
-        return <LikedMe />;
+        return <Loading />;
       default:
         return null;
     }

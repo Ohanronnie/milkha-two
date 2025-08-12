@@ -1,6 +1,7 @@
 import React from "react";
 import { FaBolt } from "react-icons/fa";
 import Profile from "../../assets/Profile.png";
+import Loading from "../layout/LoadingOrNull";
 
 const ActivityItem = ({ name, imageUrl, match, activity, activityType }) => {
   const activityColors = {
@@ -51,7 +52,7 @@ const ActivityFeed = () => {
   return (
     <div className="w-full  bg-white p-4 rounded-lg shadow">
       <h2 className="text-md font-semibold mb-4">🔍 Profile Activity Feed</h2>
-      {activityData.map((item, index) => (
+      {true ? <Loading />  : activityData.map((item, index) => (
         <ActivityItem
           key={index}
           name={item.name}

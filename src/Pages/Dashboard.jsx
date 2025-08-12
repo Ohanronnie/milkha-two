@@ -5,6 +5,7 @@ import ActivityFeed from "../components/Dashboard/ActivityFeed";
 import ProfileEnhancement from "../components/Dashboard/ProfileEnhancement";
 import { axiosInstance } from "../utils/axios";
 import toast, { Toaster } from "react-hot-toast";
+import Loading from "../components/layout/LoadingOrNull";
 const Dashboard = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [matches, setMatches] = useState(null);
@@ -49,9 +50,10 @@ const Dashboard = () => {
       <TodaysMatches details={userDetails} matches={matches} shortlisted={shortListedProfiles} />
       <div className="bg-gray-100 grid lg:grid-cols-3 gap-4 lg:px-12 px-4">
         <div className="lg:col-span-1 col-span-3">
-          <ActivityFeed details={userDetails} />
+         { <ActivityFeed details={userDetails} />}
         </div>
         <div className="lg:col-span-2 col-span-3 pb-">
+          
           <ProfileEnhancement details={userDetails} />
         </div>
       </div>

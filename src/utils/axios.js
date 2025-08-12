@@ -20,7 +20,8 @@ function getAuthHeaders() {
 let isRefreshing = false;
 
 axiosInstance.interceptors.request.use((config) => {
-  if(!config.url.endsWith("/")){
+  console.log(config)
+  if(!config.url.split("?")[1] && !config.url.endsWith("/")){
     config.url = config.url + "/"
   }
   config.headers = {
@@ -45,7 +46,7 @@ axiosInstance.interceptors.response.use(
         try {
           const refreshToken = localStorage.getItem("refresh_token");
           const res = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/auth/token/refresh`,
+            `${import.meta.env.VITE_API_BASE_URL}/auth/token/refresh/`,
             {},
             {
               headers: {

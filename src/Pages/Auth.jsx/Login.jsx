@@ -97,7 +97,7 @@ const Login = () => {
                 minLength={6}
                 className="w-full border rounded px-3 py-2 mt-1 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              <FaEyeSlash className="absolute right-3 top-3 text-gray-400" />
+              {/*<FaEyeSlash className="absolute right-3 top-3 text-gray-400" />*/}
             </div>
           </div>
           {errors && (
