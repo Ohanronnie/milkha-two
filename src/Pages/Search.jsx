@@ -99,20 +99,22 @@ const Search = () => {
                 </div>
                 {/* View Profile Button */}
                 <button
-                  onClick={() => setSelectedProfile(profile)}
+                  onClick={() => {
+                    setSelectedProfile(profile);
+                  }}
                   className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 rounded-md"
                 >
                   View Profile
                 </button>
-                {selectedProfile && (
-                  <ProfileModal
-                    profile={selectedProfile}
-                    onClose={() => setSelectedProfile(null)}
-                  />
-                )}
               </div>
             </div>
           ))
+        )}
+        {selectedProfile && (
+          <ProfileModal
+            profile={selectedProfile}
+            onClose={() => setSelectedProfile(null)}
+          />
         )}
       </div>
       <SuggestedProfiles suggestedProfiles={suggestedProfiles} />

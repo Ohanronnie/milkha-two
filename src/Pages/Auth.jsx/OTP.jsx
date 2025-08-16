@@ -40,8 +40,10 @@ const OTP = () => {
         email,
         code: otps
       });
-      toast.success("Successfully verified")
-      navigate("/Login", {
+      toast.success("Successfully verified");
+      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("refresh_token", response.data.refresh_token);
+      navigate("/RegistrationForms", {
         replace: true
       })
     } catch(error){

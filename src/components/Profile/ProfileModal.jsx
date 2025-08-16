@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaMapMarkerAlt, FaChevronDown, FaHeart, FaStar } from "react-icons/fa";
 import { axiosInstance } from "../../utils/axios";
 import toast from "react-hot-toast";
@@ -26,19 +26,26 @@ const Section = ({ title, children, defaultOpen = false }) => {
 const FullProfileModal = ({ profile: profileData, onClose }) => {
   const [show, setShow] = useState(false);
   const [profile, setProfileData] = useState(null);
+  console.log("running")
+  const hasRun = useRef(false);
+
   useEffect(() => {
-    // Delay class toggle to trigger animation
+    if (hasRun.current) return;
+    hasRun.current = true;
     setTimeout(() => setShow(true), 20);
-    if(!profileData) return;
+
+    if (!profileData) return;
+
     axiosInstance
       .get(`/profile/${profileData?.id}`)
       .then(({ data }) => {
         setProfileData(data);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Error occurred when getting user profile");
       });
   }, []);
+
   const likeOrShortlist = (type) => {
     return async () => {
       if (type === "like") {
